@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>&lt;csv-download&gt;</title>
+
+    <!-- Importing Web Component's Polyfill -->
+    <script>if (!('registerElement' in document
+      && 'createShadowRoot' in HTMLElement.prototype
+      && 'import' in document.createElement('link')
+      && 'content' in document.createElement('template'))) {
+            document.write('<script src="/bower_components/webcomponentsjs/webcomponents.min.js"><\/script>');
+      }</script>
+    <link rel="import" href="bower_components/polymer/polymer.html">
+
+    <!-- Importing Custom Elements -->
+    <link rel="import" href="src/csv-download.html">
+  </head>
+  <body>
+
+    <polymer-element name="demo-page">
+      <template>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Using Custom Elements -->
+        <csv-download class="btn btn-wide btn-primary" data="{{myArray}}">Download as csv</csv-download>
+      </template>
+      <script>
+        Polymer({
+          created: function () {
+            var myArray = [
+              [ 1, 2, 3 ],
+              [ "\"marisa\"", "hakurei,reimu", "sanae" ],
+              [ { toJSON: function () { return 'hi'; } }, '1', 'a' ]
+            ];
+            this.myArray = myArray;
+          }
+        });
+      </script>
+    </polymer-element>
+    <div class="container">
+      <demo-page></demo-page>
+    </div>
+  </body>
+</html>
