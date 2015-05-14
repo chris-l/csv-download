@@ -22,7 +22,18 @@
       <template>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
         <!-- Using Custom Elements -->
-        <csv-download class="btn btn-wide btn-primary" data="{{myArray}}">Download as csv</csv-download>
+        <div class="container">
+          <h1>csv-download demo</h1>
+          <p>Press the button to download this array as a CSV file</p>
+          <pre>
+[
+  [ 1, 2, 3 ],
+  [ "\"marisa\"", "hakurei,reimu", "sanae" ],
+  [ { toJSON: function () { return 'hi'; } }, '1', 'a' ]
+]
+          </pre>
+          <csv-download class="btn btn-wide btn-primary" data="{{myArray}}">Download as csv</csv-download>
+        </div>
       </template>
       <script>
         Polymer({
