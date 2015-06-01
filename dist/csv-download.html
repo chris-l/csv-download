@@ -6,17 +6,17 @@
 -->
 <link rel="import" href="../../polymer/polymer.html">
 
-<polymer-element name="csv-download" attributes="data filename delimiter">
+<dom-module id="csv-download">
+  <style>
+    :host {
+      background-color : lightgrey;
+      cursor : pointer;
+      display : inline-block;
+      padding : 8px 12px;
+    }
+  </style>
   <template>
-    <style>
-      :host {
-        background-color : lightgrey;
-        cursor : pointer;
-        display : inline-block;
-        padding : 8px 12px;
-      }
-    </style>
-    <div on-click="{{download}}">
+    <div on-click="download">
       <content>Download CSV</content>
     </div>
   </template>

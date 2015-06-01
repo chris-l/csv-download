@@ -1,6 +1,6 @@
 {
   "name": "csv-download",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Download an array as a CSV file",
   "license": "MIT",
   "main": "dist/csv-download.html",
@@ -15,6 +15,6 @@
     "bower_components"
     ],
     "dependencies": {
-      "polymer": "Polymer/polymer#^0.5.5"
+      "polymer": "Polymer/polymer#^1.0"
     }
 }

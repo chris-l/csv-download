@@ -18,9 +18,9 @@
   </head>
   <body>
 
-    <polymer-element name="demo-page">
+    <dom-module id="demo-page">
+      <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
       <template>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
         <!-- Using Custom Elements -->
         <div class="container">
           <h1>csv-download demo</h1>
@@ -37,17 +37,23 @@
       </template>
       <script>
         Polymer({
-          created: function () {
-            var myArray = [
-              [ 1, 2, 3 ],
-              [ "\"marisa\"", "hakurei,reimu", "sanae" ],
-              [ { toJSON: function () { return 'hi'; } }, '1', 'a' ]
-            ];
-            this.myArray = myArray;
+          is : 'demo-page',
+          properties : {
+            myArray : {
+              type : Array,
+              value : function () {
+                var myArray = [
+                  [ 1, 2, 3 ],
+                  [ "\"marisa\"", "hakurei,reimu", "sanae" ],
+                  [ { toJSON: function () { return 'hi'; } }, '1', 'a' ]
+                ];
+                return myArray;
+              }
+            }
           }
         });
       </script>
-    </polymer-element>
+    </dom-module>
     <div class="container">
       <demo-page></demo-page>
     </div>
