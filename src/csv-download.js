@@ -20,10 +20,24 @@
     }).join('\n');
   }
 
-  Polymer('csv-download', {
-    delimiter : ',',
-    filename : 'data.csv',
-
+  Polymer({
+    is : 'csv-download',
+    properties : {
+      delimiter : {
+        type : String,
+        value : ','
+      },
+      data : {
+        type : Array,
+        value : function () {
+          return [];
+        }
+      },
+      filename : {
+        type : String,
+        value : 'data.csv'
+      }
+    },
     download: function () {
       var element;
 
@@ -31,10 +45,6 @@
       element.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(arrayToCsv(this.data, this.delimiter));
       element.download = this.filename;
       element.click();
-    },
-
-    created : function () {
-      this.data = [];
     }
   });
 }());
