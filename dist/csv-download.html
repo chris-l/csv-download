@@ -7,18 +7,8 @@
 <link rel="import" href="../../polymer/polymer.html">
 
 <dom-module id="csv-download">
-  <style>
-    :host {
-      background-color : lightgrey;
-      cursor : pointer;
-      display : inline-block;
-      padding : 8px 12px;
-    }
-  </style>
   <template>
-    <div on-click="download">
-      <content>Download CSV</content>
-    </div>
+    <content>Download CSV</content>
   </template>
-  <script src="csv-download.js"></script>
-</polymer-element>
+</dom-module>
+<script src="csv-download.js"></script>

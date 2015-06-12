@@ -1,6 +1,6 @@
 # &lt;csv-download&gt;
 
-A simple web component to download an array of arrays (or array-like objects) as a CSV file.
+A simple web component to download an array of arrays (or array-like objects) as a CSV file. It extends the `<a>` element.
 
 ## Demo
 
@@ -33,7 +33,7 @@ Or [download as ZIP](https://github.com/chris-l/csv-download/archive/master.zip)
 3. Start using it!
 
     ```html
-    <csv-download data="{{someArray}}" filename="someCsv.csv"></csv-download>
+    <a is="csv-download" data="{{someArray}}" download="someCsv.csv"></a>
     ```
 
 ## Options
@@ -41,7 +41,7 @@ Or [download as ZIP](https://github.com/chris-l/csv-download/archive/master.zip)
 Attribute     | Options     | Default      | Description
 ---           | ---         | ---          | ---
 `data`        | *array*     | `[]`         | Array of arrays to be converted to csv.
-`filename`    | *string*    | `data.csv`   | Default filename.
+`download`    | *string*    | `data.csv`   | Default filename.
 `delimiter`   | *string*    | `,`          | Delimiter to separate the columns.
 
 ## Development
