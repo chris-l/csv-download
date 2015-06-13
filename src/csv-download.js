@@ -51,13 +51,16 @@
           'data:application/octet-stream,' + encodeURIComponent(this.csvString));
     },
     ready : function () {
-      if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-        this.addEventListener('click', function (e) {
+      this.addEventListener('click', function (e) {
+        var data;
+
+        this.createURI();
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
           e.preventDefault();
-          var data = new Blob([ this.csvString ]);
+          data = new Blob([ this.csvString ]);
           window.navigator.msSaveOrOpenBlob(data, this.download);
-        }.bind(this));
-      }
+        }
+      }, true);
     }
   });
 }());
