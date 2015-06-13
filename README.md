@@ -1,4 +1,4 @@
-# &lt;csv-download&gt;
+# csv-download
 
 A simple web component to download an array of arrays (or array-like objects) as a CSV file. It extends the `<a>` element.
 
@@ -44,39 +44,6 @@ Attribute     | Options     | Default      | Description
 `download`    | *string*    | `data.csv`   | Default filename.
 `delimiter`   | *string*    | `,`          | Delimiter to separate the columns.
 
-## Development
-
-In order to run it locally you'll need to fetch some dependencies and a basic server setup.
-
-* Install [Bower](http://bower.io/) & [Grunt](http://gruntjs.com/):
-
-    ```sh
-    $ [sudo] npm install -g bower grunt-cli
-    ```
-
-* Install local dependencies:
-
-    ```sh
-    $ bower install && npm install
-    ```
-
-* To test your project, start the development server and open `http://localhost:8000`.
-
-    ```sh
-    $ grunt server
-    ```
-
-* To build the distribution files before releasing a new version.
-
-    ```sh
-    $ grunt build
-    ```
-
-* To provide a live demo, send everything to `gh-pages` branch.
-
-    ```sh
-    $ grunt deploy
-    ```
 
 ## Contributing
 
