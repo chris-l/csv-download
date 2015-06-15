@@ -11,7 +11,6 @@
       && 'content' in document.createElement('template'))) {
             document.write('<script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"><\/script>');
       }</script>
-    <link rel="import" href="bower_components/polymer/polymer.html">
 
     <!-- Importing Custom Elements -->
     <link rel="import" href="src/csv-download.html">
@@ -43,8 +42,7 @@
         ];
 
         interval = setInterval(function () {
-          // Wait for the element to be ready - a thing for Polymer and IE,
-          // not necessary for any other browser
+          // Wait for the element to be ready
           if (element.createURI) {
             clearInterval(interval);
             element.data = myArray;
