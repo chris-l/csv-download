@@ -14,6 +14,7 @@
 
     <!-- Importing Custom Elements -->
     <link rel="import" href="src/csv-download.html">
+    <link rel="import" href="bower_components/polymer/polymer.html">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
   </head>
   <body>
@@ -28,27 +29,18 @@
   [ { toJSON: function () { return 'hi'; } }, '1', 'a' ]
 ]
       </pre>
-      <a is="csv-download" id="mycsv" class="btn btn-wide btn-primary">Download as csv</a>
+      <template is="dom-bind" id="template">
+        <a is="csv-download" id="mycsv" data="{{myArray}}" class="btn btn-wide btn-primary">Download as csv</a>
+        <script>
+          var el = document.getElementById('template');
+
+          el.myArray = [
+            [ 1, 2, 3 ],
+            [ "\"marisa\"", "hakurei,reimu", "sanae" ],
+            [ { toJSON: function () { return 'hi'; } }, '1', 'a' ]
+          ];
+        </script>
+      </template>
     </div>
-    <script>
-      (function () {
-        var element, myArray, interval;
-
-        element = document.getElementById('mycsv');
-        myArray = [
-          [ 1, 2, 3 ],
-          [ "\"marisa\"", "hakurei,reimu", "sanae" ],
-          [ { toJSON: function () { return 'hi'; } }, '1', 'a' ]
-        ];
-
-        interval = setInterval(function () {
-          // Wait for the element to be ready
-          if (element.createURI) {
-            clearInterval(interval);
-            element.data = myArray;
-          }
-        }, 1);
-      }());
-    </script>
   </body>
 </html>

@@ -9,15 +9,20 @@
 
   function setProperty(obj, name, def, fn) {
     if (obj.getAttribute(name) === null) {
-      obj.setAttribute(name, obj.props[name] || def);
+      if (obj.props[name] && typeof obj.props[name] !== 'object') {
+        obj.setAttribute(name, obj.props[name]);
+      }
+      obj.setAttribute(name, def);
     }
     Object.defineProperty(obj, name, {
       get : function () {
-        return obj.getAttribute(name) || obj.props[name] || def;
+        return obj.props[name] || obj.getAttribute(name) || def;
       },
       set : function (val) {
         obj.props[name] = val;
-        obj.setAttribute(name, val);
+        if (typeof val !== 'object') {
+          obj.setAttribute(name, val);
+        }
         if (typeof fn === 'function') {
           fn.call(obj);
         }
@@ -52,7 +57,7 @@
 
   csvDownloadPrototype.createdCallback = function () {
     this.props = {};
-    this.data = this.data || [];
+    setProperty(this, 'data', '', this.createURI);
     setProperty(this, 'download', 'data.csv', this.createURI);
     setProperty(this, 'delimiter', ',', this.createURI);
     this.createURI();
