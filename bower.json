@@ -1,6 +1,6 @@
 {
   "name": "csv-download",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Download an array as a CSV file",
   "license": "MIT",
   "main": "dist/csv-download.html",
