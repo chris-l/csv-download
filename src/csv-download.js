@@ -2,44 +2,120 @@
 /*global document, window, Blob, HTMLLinkElement*/
 (function () {
   'use strict';
-  var map, csvDownloadPrototype;
+  var map, properties, csvDownloadPrototype, declaredProps;
 
   csvDownloadPrototype = Object.create(HTMLLinkElement.prototype);
   map = Function.prototype.call.bind(Array.prototype.map);
 
-  function setProperty(obj, name, def, fn) {
-    if (obj.getAttribute(name) === null) {
-      if (obj.props[name] && typeof obj.props[name] !== 'object') {
-        obj.setAttribute(name, obj.props[name]);
-      }
-      obj.setAttribute(name, def);
-    }
-    Object.defineProperty(obj, name, {
-      get : function () {
-        return obj.props[name] || obj.getAttribute(name) || def;
-      },
-      set : function (val) {
-        obj.props[name] = val;
-        if (typeof val !== 'object') {
-          obj.setAttribute(name, val);
-        }
-        if (typeof fn === 'function') {
-          fn.call(obj);
-        }
-      }
-    });
-  }
 
+  /**
+   * Uses Object.defineProperty to add setters and getters
+   * to each property of the element.
+   *
+   * Each property is reflected to the equivalent DOM attribute
+   * @param {object} obj The element to add the shadow root.
+   * @param {object} props Object with the properties.
+   */
+  declaredProps = (function () {
+    var exports = {};
+
+    function parse(val, type) {
+      switch (type) {
+      case Object:
+      case Array:
+        return JSON.parse(val);
+      default:
+        return val || '';
+      }
+    }
+    function toHyphens(str) {
+      return str.replace(/([A-Z])/g, '-$1').toLowerCase();
+    }
+    exports.serialize = function (val) {
+      if (typeof val === 'string') {
+        return String(val);
+      }
+      return JSON.stringify(val);
+    };
+
+    exports.syncProperty = function (obj, props, attr, val) {
+      if (props[attr]) {
+        var type = props[attr].type || props[attr];
+        obj[attr] = parse(val, type);
+      }
+    };
+
+    exports.init = function (obj, props) {
+      Object.defineProperty(obj, 'props', {
+        enumerable : false,
+        configurable : true,
+        value : {}
+      });
+
+      Object.keys(props).forEach(function (name) {
+        var attrName = toHyphens(name), desc;
+
+        desc = props[name].type ? props[name] : { type : props[name] };
+        obj.props[name] = obj[name] || desc.value;
+
+        if (obj.getAttribute(attrName) === null) {
+          if (desc.reflectToAttribute) {
+            obj.setAttribute(attrName, exports.serialize(obj.props[name]));
+          }
+        } else {
+          obj.props[name] = parse(obj.getAttribute(attrName), desc.type);
+        }
+        Object.defineProperty(obj, name, {
+          get : function () {
+            return obj.props[name] || parse(obj.getAttribute(attrName), desc.type);
+          },
+          set : function (val) {
+            obj.props[name] = val;
+            if (desc.reflectToAttribute) {
+              obj.setAttribute(attrName, exports.serialize(val));
+            }
+            if (typeof obj[desc.observer] === 'function') {
+              obj[desc.observer](val);
+            }
+          }
+        });
+      });
+    };
+
+    return exports;
+  }());
+
+  /**
+   * Actually convert the array to a CSV string
+   * @param {object} array 2D Array or array-like object to convert to CSV.
+   * @param {string} delimiter String used to concatenate the columns. The default is ","
+   */
   function arrayToCsv(array, delimiter) {
     delimiter = delimiter || ',';
 
-    if (typeof array !== 'object' && !Array.isArray(array)) {
+    if (typeof array !== 'object' || array === null) {
       return '';
     }
     return map(array, function (row) {
       return map(row, function (cell) {
+        var cache = [];
+
+        // From : http://stackoverflow.com/a/11616993/2507726
+        /*jslint unparam: true*/
+        function circularReplacer(key, value) {
+          if (typeof value === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+              return;
+            }
+            cache.push(value);
+          }
+          return value;
+        }
+        /*jslint unparam: false*/
+
         if (typeof cell !== 'string') {
-          cell = JSON.stringify(cell).replace(/^"|"$/g, '');
+          cell = JSON.stringify(cell, circularReplacer).replace(/^"|"$/g, '');
+          cache = null;
         }
         if (RegExp(delimiter + '|"').test(cell)) {
           cell = '"' + cell.replace(/"/g, '""') + '"';
@@ -55,11 +131,32 @@
         'data:text/csv,' + encodeURIComponent(this.csvString));
   };
 
+  properties = {
+    data : {
+      type : Object,
+      value : '',
+      observer : 'createURI'
+    },
+    download : {
+      type : String,
+      value : 'data.csv',
+      reflectToAttribute : true
+    },
+    delimiter : {
+      type : String,
+      value : ',',
+      observer : 'createURI'
+    }
+  };
+
+  /*jslint unparam:true*/
+  csvDownloadPrototype.attributeChangedCallback = function (attr, oldVal, newVal) {
+    declaredProps.syncProperty(this, properties, attr, newVal);
+  };
+  /*jslint unparam:false*/
+
   csvDownloadPrototype.createdCallback = function () {
-    this.props = {};
-    setProperty(this, 'data', '', this.createURI);
-    setProperty(this, 'download', 'data.csv', this.createURI);
-    setProperty(this, 'delimiter', ',', this.createURI);
+    declaredProps.init(this, properties);
     this.createURI();
 
     this.addEventListener('click', function (e) {
